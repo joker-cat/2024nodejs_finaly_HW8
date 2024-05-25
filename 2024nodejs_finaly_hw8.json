@@ -202,6 +202,26 @@
 						{
 							"name": "post",
 							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3005/posts/66519fbc6d8c68c95ca3bfac",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3005",
+									"path": [
+										"posts",
+										"66519fbc6d8c68c95ca3bfac"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "post",
+							"request": {
 								"method": "POST",
 								"header": [
 									{
@@ -211,7 +231,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"user\": \"665189f58026468d025a4f6d\",\r\n  \"content\": \"最終主線任務3\",\r\n  \"tags\": [\r\n    \"node\",\"hw8\"\r\n  ],\r\n  \"type\": \"學習\"\r\n}",
+									"raw": "{\r\n  \"user\": \"665189f58026468d025a4f6d\",\r\n  \"content\": \"最終主線任務5\",\r\n  \"tags\": [\r\n    \"node\",\"hw8\"\r\n  ],\r\n  \"type\": \"學習\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -321,6 +341,14 @@
 										"posts"
 									]
 								}
+							},
+							"response": []
+						},
+						{
+							"name": "comment",
+							"request": {
+								"method": "GET",
+								"header": []
 							},
 							"response": []
 						}

@@ -5,6 +5,7 @@ const { sendJWT, isAuth } = require("../service/statusHandles");
 const validateKey = require("../service/validateModule");
 const Post = require("../model/PostModel");
 const User = require("../model/UserModel");
+const Comment = require("../model/CommentModel");
 const appError = require("../service/appError");
 const handErrorAsync = require("../service/handErrorAsync");
 const postRouter = express.Router();
@@ -16,9 +17,29 @@ postRouter.get(`/posts`, handErrorAsync(async (req, res) => {
   const data = await Post.find(q)
     .populate({
       path: "user",
-      select: "name photo",
+      select: "name photo -_id",
+    })
+    .populate({
+      path: "comments",
+      select: "comment user createdAt -_id -post",
     })
     .sort(timeSort);
+  resSuccess(res, 200, data);
+})
+);
+
+//查看單一貼文
+postRouter.get(`/posts/:postId`, handErrorAsync(async (req, res, next) => {
+  const data = await Post.find({ _id: req.params.postId.trim() })
+    .populate({
+      path: "user",
+      select: "name photo",
+    })
+    .populate({
+      path: "comments",
+      select: "comment user createdAt",
+    })
+  if (data.length === 0) return next(appError(400, "找不到貼文"));
   resSuccess(res, 200, data);
 })
 );
@@ -37,6 +58,29 @@ postRouter.post("/post", isAuth, handErrorAsync(async (req, res, next) => {
   resSuccess(res, 200, [newPost]);
 })
 );
+
+//新增貼文留言
+postRouter.post("/posts/:postId/comment", isAuth, handErrorAsync(async (req, res, next) => {
+  const data = await Post.find({ _id: req.params.postId.trim() })
+  if (data.length === 0) return next(appError(400, "找不到貼文"));
+  const comment = req.body.comment;
+  if (typeof comment !== 'string' || comment.trim() === "") return next(appError(400, "請填寫留言"));
+  const newComment = await Comment.create({
+    comment,
+    user: req.user._id,
+    post: req.params.postId
+  });
+  resSuccess(res, 200, [newComment]);
+})
+);
+
+
+
+
+
+
+
+
 
 //修改貼文
 postRouter.patch("/post/:postId", isAuth, handErrorAsync(async (req, res, next) => {

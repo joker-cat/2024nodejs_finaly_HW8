@@ -7,7 +7,6 @@ const keyArray = [
   "type",
   "image",
   "likes",
-  "comments",
   "tags",
 ];
 
