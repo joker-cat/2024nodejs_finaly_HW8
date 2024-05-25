@@ -1,0 +1,374 @@
+{
+	"info": {
+		"_postman_id": "2550f520-f9a5-44a6-9e14-5a4f9f211f74",
+		"name": "2024nodejs_finaly_hw8",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29889308"
+	},
+	"item": [
+		{
+			"name": "local",
+			"item": [
+				{
+					"name": "會員功能",
+					"item": [
+						{
+							"name": "sign_up",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"tom\",\r\n    \"email\":\"tom@gmail.com\",\r\n    \"password\":\"tom123456\",\r\n    \"confirmPassword\":\"tom123456\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3005/users/sign_up",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3005",
+									"path": [
+										"users",
+										"sign_up"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "sign_in",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDQzNzc1MjU3ZTZhOWU1OTVjZTk0MSIsImlhdCI6MTcxNTc0NjY3NywiZXhwIjoxNzE2MzUxNDc3fQ.geBNZ_kBZBPg0EhzaINc9UnHrsSLDFw_DSHNBTVqz3",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\":\"tom@gmail.com\",\r\n    \"password\":\"tom123456\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3005/users/sign_in",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3005",
+									"path": [
+										"users",
+										"sign_in"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "updatePassword",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDQ0NmNiMmFlYzI0MmMwYzcxYWY2MSIsImlhdCI6MTcxNTc1MDY4NiwiZXhwIjoxNzE2MzU1NDg2fQ.28oCD1Qbh_p-k1FwsGWyOk1nx0EZKmDrPsd36kJ-CMY",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"password\": \"tomcat123456\",\r\n    \"confirmPassword\": \"tomcat123456\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3005/users/updatePassword",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3005",
+									"path": [
+										"users",
+										"updatePassword"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "profile",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NTE4OWY1ODAyNjQ2OGQwMjVhNGY2ZCIsImlhdCI6MTcxNjYyNTI5NCwiZXhwIjoxNzE3MjMwMDk0fQ.Mpnu1lYaVfuYrV6iZDxaal65CFSw1jNXSO-8xk32PWc"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3005/users/profile",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3005",
+									"path": [
+										"users",
+										"profile"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "profile",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDYxYTcyZmRhODkwNGI0ZTY2NGZmOCIsImlhdCI6MTcxNTg3MDMyMiwiZXhwIjoxNzE2NDc1MTIyfQ.lAZryp64onuNl_6ujsWAHhXQatNgX5rDq8f7s02kc5s",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"tommy123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3005/users/profile",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3005",
+									"path": [
+										"users",
+										"profile"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "會員按讚追蹤動態",
+					"item": []
+				},
+				{
+					"name": "動態貼文",
+					"item": [
+						{
+							"name": "posts",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3005/posts",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3005",
+									"path": [
+										"posts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "post",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NTE4OWY1ODAyNjQ2OGQwMjVhNGY2ZCIsImlhdCI6MTcxNjYyNTI5NCwiZXhwIjoxNzE3MjMwMDk0fQ.Mpnu1lYaVfuYrV6iZDxaal65CFSw1jNXSO-8xk32PWc"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"user\": \"665189f58026468d025a4f6d\",\r\n  \"content\": \"最終主線任務3\",\r\n  \"tags\": [\r\n    \"node\",\"hw8\"\r\n  ],\r\n  \"type\": \"學習\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3005/post",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3005",
+									"path": [
+										"post"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "post",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NTE4OWY1ODAyNjQ2OGQwMjVhNGY2ZCIsImlhdCI6MTcxNjYyMjUwNiwiZXhwIjoxNzE3MjI3MzA2fQ.GV5b5oMq-5Rl33V5I6dZvul09XQxeVYjmWUakWCOZAg"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"content\":\"我修改了最終任務\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3005/post/6651912fd8a9c964548a8714",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3005",
+									"path": [
+										"post",
+										"6651912fd8a9c964548a8714"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "post",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NTE4ZmFmMmYzOTRkMDExNDQzNDA3YSIsImlhdCI6MTcxNjYyMzE2OSwiZXhwIjoxNzE3MjI3OTY5fQ.3X6zLUkgl9jaz8Z65bTdjGQ32YMMCbqW03rRlYB9CQs"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3005/post/6651912fd8a9c964548a8714",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3005",
+									"path": [
+										"post",
+										"6651912fd8a9c964548a8714"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "posts",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NTE4ZmFmMmYzOTRkMDExNDQzNDA3YSIsImlhdCI6MTcxNjYyNTM2MywiZXhwIjoxNzE3MjMwMTYzfQ.mlx3ZAluVcTJ_K-yfEOaBU_1lsE8QUg5SwgNL36L-hc"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"password\":\"tom123456\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3005/posts",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3005",
+									"path": [
+										"posts"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "其他",
+					"item": [
+						{
+							"name": "uploadImg",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDYxYTcyZmRhODkwNGI0ZTY2NGZmOCIsImlhdCI6MTcxNTg3MDMyMiwiZXhwIjoxNzE2NDc1MTIyfQ.lAZryp64onuNl_6ujsWAHhXQatNgX5rDq8f7s02kc5s",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": [],
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:3005/upload/file",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3005",
+									"path": [
+										"upload",
+										"file"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}
