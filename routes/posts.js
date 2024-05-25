@@ -1,12 +1,15 @@
 const express = require("express");
-const { resSuccessWrite } = require("../service/resModule");
+const bcrypt = require("bcryptjs");
+const { resSuccess } = require("../service/resModule");
+const { sendJWT, isAuth } = require("../service/statusHandles");
 const validateKey = require("../service/validateModule");
 const Post = require("../model/PostModel");
+const User = require("../model/UserModel");
 const appError = require("../service/appError");
 const handErrorAsync = require("../service/handErrorAsync");
 const postRouter = express.Router();
 
-
+//查看所有貼文
 postRouter.get(`/posts`, handErrorAsync(async (req, res) => {
   const timeSort = req.query.timeSort == "asc" ? "createdAt" : "-createdAt";
   const q = req.query.q !== undefined ? { content: new RegExp(req.query.q) } : {};
@@ -16,11 +19,13 @@ postRouter.get(`/posts`, handErrorAsync(async (req, res) => {
       select: "name photo",
     })
     .sort(timeSort);
-  resSuccessWrite(res, 200, data);
+  resSuccess(res, 200, data);
 })
 );
 
-postRouter.post("/post", handErrorAsync(async (req, res, next) => {
+//貼文
+postRouter.post("/post", isAuth, handErrorAsync(async (req, res, next) => {
+  if (req.user._id.toString() !== req.body.user) return next(appError(400, "請確認使用者"));
   if (req.body.content == undefined || req.body.content.trim() === "") {
     return next(appError(400, "你沒有填寫 content 資料"));
   }
@@ -29,34 +34,60 @@ postRouter.post("/post", handErrorAsync(async (req, res, next) => {
   }
 
   const newPost = await Post.create(req.body);
-  resSuccessWrite(res, 200, [newPost]);
+  resSuccess(res, 200, [newPost]);
 })
 );
 
-postRouter.patch("/post/:postId", handErrorAsync(async (req, res, next) => {
+//修改貼文
+postRouter.patch("/post/:postId", isAuth, handErrorAsync(async (req, res, next) => {
+  const patchUser = await Post.findById(req.params.postId.trim());
+  if (patchUser === null) return next(appError(400, "找不到資料"));
+  if (req.user._id.toString() !== patchUser.user.toString()) {
+    return next(appError(400, "請確認使用者"));
+  }
   const reqObj = req.body;
-  const postId = req.params.postId.trim();
-  const notFountKey = validateKey(Object.keys(reqObj));
-  if (notFountKey?.name === 'Error') return next(notFountKey);
+  const postId = req.params.postId;
+  const notFoundKey = validateKey(Object.keys(reqObj));
+  if (notFoundKey?.name === 'Error') return next(notFoundKey);
   const isNull = await Post.findByIdAndUpdate(postId, reqObj);
-  if (isNull === null) return next(appError(400, "找不到資料"));
-  resSuccessWrite(res, 200, "更新成功");
+  if (isNull === null) return next(appError(400, "修改失敗"));
+  resSuccess(res, 200, "更新成功");
 })
 );
 
-postRouter.delete("/post/:postId", handErrorAsync(async (req, res, next) => {
+//刪除特定貼文
+postRouter.delete("/post/:postId", isAuth, handErrorAsync(async (req, res, next) => {
   const postId = req.params.postId.trim();
-  if (postId === '') return next(appError(400, "找不到資料"));
+  if (postId === '') return next(appError(400, "路徑錯誤"));
+  const delPost = await Post.findById(postId);
+  if (delPost === null) return next(appError(400, "找不到資料"));
+  console.log(req.user._id.toString(), delPost.user);
+  if (req.user._id.toString() !== delPost.user.toString()) {
+    return next(appError(400, "請確認使用者"));
+  }
   const isNull = await Post.findByIdAndDelete(postId);
   if (isNull === null) return next(appError(400, "找不到資料"));
-  resSuccessWrite(res, 200, "刪除成功");
+
+  resSuccess(res, 200, "刪除成功");
 })
 );
 
-postRouter.delete("/posts", handErrorAsync(async (req, res, next) => {
+//清空使用者所有貼文
+postRouter.delete("/posts", isAuth, handErrorAsync(async (req, res, next) => {
   if (req.originalUrl !== "/posts") return next(appError(400, "清空失敗"));
-  await Post.deleteMany({});
-  resSuccessWrite(res, 200, "全部清空");
+  if (!(req.body.password && typeof req.body.password === 'string')) {
+    return next(appError(400, "密碼格式錯誤"));
+  }
+
+  // password原本為隱藏，透過select('+password')顯示取得
+  const user = await User.findOne({ _id: req.user._id.toString() }).select('+password');
+  // 輸入密碼與雜湊密碼比對
+  const auth = await bcrypt.compare(req.body.password, user.password);
+
+  if (!auth) return next(appError(400, "密碼錯誤"));
+
+  await Post.deleteMany({ user: req.user._id });
+  resSuccess(res, 200, "全部清空");
 })
 );
 
