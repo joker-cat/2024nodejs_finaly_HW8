@@ -118,7 +118,7 @@
 								"header": [
 									{
 										"key": "Authorization",
-										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NTE4OWY1ODAyNjQ2OGQwMjVhNGY2ZCIsImlhdCI6MTcxNjYyNTI5NCwiZXhwIjoxNzE3MjMwMDk0fQ.Mpnu1lYaVfuYrV6iZDxaal65CFSw1jNXSO-8xk32PWc"
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NTE4ZmFmMmYzOTRkMDExNDQzNDA3YSIsImlhdCI6MTcxNjY0MTcwNSwiZXhwIjoxNzE3MjQ2NTA1fQ.a4fQxweHN51-8UdEnOT8LdOMm1HNCZ-YGX36C3Px544"
 									}
 								],
 								"url": {
@@ -220,18 +220,44 @@
 							"response": []
 						},
 						{
+							"name": "userposts",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NTE4ZmFmMmYzOTRkMDExNDQzNDA3YSIsImlhdCI6MTcxNjY5Nzk0MiwiZXhwIjoxNzE3MzAyNzQyfQ.-sbQrTiG_Ai29_tf6qZSII693tnfRFwaCTI8RZQPl2g"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3005/post/user/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3005",
+									"path": [
+										"post",
+										"user",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "post",
 							"request": {
 								"method": "POST",
 								"header": [
 									{
 										"key": "Authorization",
-										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NTE4OWY1ODAyNjQ2OGQwMjVhNGY2ZCIsImlhdCI6MTcxNjYyNTI5NCwiZXhwIjoxNzE3MjMwMDk0fQ.Mpnu1lYaVfuYrV6iZDxaal65CFSw1jNXSO-8xk32PWc"
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NTE4ZmFmMmYzOTRkMDExNDQzNDA3YSIsImlhdCI6MTcxNjY0MTcwNSwiZXhwIjoxNzE3MjQ2NTA1fQ.a4fQxweHN51-8UdEnOT8LdOMm1HNCZ-YGX36C3Px544"
 									}
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"user\": \"665189f58026468d025a4f6d\",\r\n  \"content\": \"最終主線任務5\",\r\n  \"tags\": [\r\n    \"node\",\"hw8\"\r\n  ],\r\n  \"type\": \"學習\"\r\n}",
+									"raw": "{\r\n  \"user\": \"66518faf2f394d011443407a\",\r\n  \"content\": \"最終主線任務 tom\",\r\n  \"tags\": [\r\n    \"node\",\"hw8\"\r\n  ],\r\n  \"type\": \"學習\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -347,8 +373,87 @@
 						{
 							"name": "comment",
 							"request": {
-								"method": "GET",
-								"header": []
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NTE4ZmFmMmYzOTRkMDExNDQzNDA3YSIsImlhdCI6MTcxNjY0MTcwNSwiZXhwIjoxNzE3MjQ2NTA1fQ.a4fQxweHN51-8UdEnOT8LdOMm1HNCZ-YGX36C3Px544"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"comment\":\"456\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3005/posts/6651dfda0206cf5d741f0263/comment",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3005",
+									"path": [
+										"posts",
+										"6651dfda0206cf5d741f0263",
+										"comment"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "like",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NTE4ZmFmMmYzOTRkMDExNDQzNDA3YSIsImlhdCI6MTcxNjY5Nzk0MiwiZXhwIjoxNzE3MzAyNzQyfQ.-sbQrTiG_Ai29_tf6qZSII693tnfRFwaCTI8RZQPl2g"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3005/posts/6651dfda0206cf5d741f0263/like",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3005",
+									"path": [
+										"posts",
+										"6651dfda0206cf5d741f0263",
+										"like"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "unlike",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NTE4ZmFmMmYzOTRkMDExNDQzNDA3YSIsImlhdCI6MTcxNjY5Nzk0MiwiZXhwIjoxNzE3MzAyNzQyfQ.-sbQrTiG_Ai29_tf6qZSII693tnfRFwaCTI8RZQPl2g"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3005/posts/6651dfda0206cf5d741f0263/unlike",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3005",
+									"path": [
+										"posts",
+										"6651dfda0206cf5d741f0263",
+										"unlike"
+									]
+								}
 							},
 							"response": []
 						}
