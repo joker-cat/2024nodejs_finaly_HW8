@@ -28,6 +28,18 @@ postRouter.get(`/posts`, handErrorAsync(async (req, res) => {
 })
 );
 
+//取得個人所有貼文列表
+postRouter.get(`/post/user/:userId`, isAuth, handErrorAsync(async (req, res, next) => {
+  const userId = req.params.userId;
+  const authId = req.user._id.toString();
+  if (typeof userId !== 'string' || userId.trim() === "") return next(appError(400, "路徑缺少使用者"));
+  if (userId !== userId) return next(appError(400, "請確認使用者"));
+  const data = await Post.find({ user: req.params.userId })
+  if (data.length === 0) return next(appError(400, "使用者無貼文"));
+  resSuccess(res, 200, data);
+})
+);
+
 //查看單一貼文
 postRouter.get(`/posts/:postId`, handErrorAsync(async (req, res, next) => {
   const data = await Post.find({ _id: req.params.postId.trim() })
@@ -74,13 +86,31 @@ postRouter.post("/posts/:postId/comment", isAuth, handErrorAsync(async (req, res
 })
 );
 
+//新增一則貼文的讚
+postRouter.post("/posts/:postId/like", isAuth, handErrorAsync(async (req, res, next) => {
+  const data = await Post.find({ _id: req.params.postId.trim() })
+  if (data.length === 0) return next(appError(400, "找不到貼文"));
+  const userId = req.user._id;
+  const postId = req.params.postId;
+  const includeLike = await User.find({ _id: userId, likes: { $in: [postId] } });
+  if (includeLike.length !== 0) return next(appError(400, "已經按過讚了"));
+  await User.updateOne({ _id: userId }, { $push: { likes: postId } })
+  resSuccess(res, 200, '按讚成功');
+})
+);
 
-
-
-
-
-
-
+//取消一則貼文的讚
+postRouter.delete("/posts/:postId/unlike", isAuth, handErrorAsync(async (req, res, next) => {
+  const data = await Post.find({ _id: req.params.postId.trim() })
+  if (data.length === 0) return next(appError(400, "找不到貼文"));
+  const userId = req.user._id;
+  const postId = req.params.postId;
+  const includeLike = await User.find({ _id: userId, likes: { $in: [postId] } });
+  if (includeLike.length === 0) return next(appError(400, "尚未按讚"));
+  await User.updateOne({ _id: userId }, { $pull: { likes: postId } })
+  resSuccess(res, 200, '取消按讚成功');
+})
+);
 
 //修改貼文
 postRouter.patch("/post/:postId", isAuth, handErrorAsync(async (req, res, next) => {
