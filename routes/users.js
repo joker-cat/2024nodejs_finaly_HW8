@@ -2,6 +2,7 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const validator = require("validator");
 const User = require("../model/UserModel");
+const { resSuccess } = require("../service/resModule");
 const appError = require("../service/appError");
 const handErrorAsync = require("../service/handErrorAsync");
 const { sendJWT, isAuth } = require("../service/statusHandles");
@@ -75,9 +76,8 @@ userRouter.post("/updatePassword", isAuth, handErrorAsync(async (req, res, next)
 }
 ));
 
-//找回密碼
+//查詢個人資料
 userRouter.get("/profile", isAuth, handErrorAsync(async (req, res, next) => {
-  //再次檢查是否有登入，即將更改密碼
   if (req.user === undefined) return next(appError(401, '你尚未登入！', next));
   const user = await User.findById(req.user.id);
   res.status(201).json({
@@ -86,7 +86,6 @@ userRouter.get("/profile", isAuth, handErrorAsync(async (req, res, next) => {
   });
 }
 ));
-
 
 //更新個人資料
 userRouter.patch("/profile", isAuth, handErrorAsync(async (req, res, next) => {
@@ -100,5 +99,34 @@ userRouter.patch("/profile", isAuth, handErrorAsync(async (req, res, next) => {
   sendJWT(user, 200, res);
 }
 ));
+
+//追蹤
+userRouter.post("/users/:userId/follow", isAuth, handErrorAsync(async (req, res, next) => {
+  const userId = req.params.userId;
+  const authId = req.user._id.toString();
+  if (typeof userId !== 'string' || userId.trim() === "") return next(appError(400, "路徑缺少使用者"));
+
+
+
+  sendJWT(user, 201, res);
+}
+));
+
+
+
+//取得個人按讚列表
+userRouter.get("/getLikeList", isAuth, handErrorAsync(async (req, res, next) => {
+  if (req.user === undefined) return next(appError(401, '你尚未登入！', next));
+  const likesData = await User.findById(req.user.id, "likes -_id")
+    .populate({
+      path: "likes",
+      select: "-_id",
+    });
+  console.log(likesData.likes);
+  resSuccess(res, 201, likesData.likes === undefined ? '沒有按讚' : [likesData.likes]);
+}
+));
+
+
 
 module.exports = userRouter;

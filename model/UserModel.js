@@ -31,7 +31,14 @@ const [schema, options] = [
     },
     likes: {
       type: mongoose.Schema.ObjectId,
-      default: [],
+      ref: "post",
+      default: []
+    },
+    following:{ //追蹤
+
+    },
+    followers:{ //被追蹤
+
     },
     createdAt: {
       type: Date,
