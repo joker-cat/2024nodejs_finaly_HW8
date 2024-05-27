@@ -35,10 +35,14 @@ const [schema, options] = [
       default: []
     },
     following:{ //追蹤
-
+      type: mongoose.Schema.ObjectId,
+      ref: "user",
+      default: []
     },
     followers:{ //被追蹤
-
+      type: mongoose.Schema.ObjectId,
+      ref: "user",
+      default: []
     },
     createdAt: {
       type: Date,

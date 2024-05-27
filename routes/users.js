@@ -101,18 +101,50 @@ userRouter.patch("/profile", isAuth, handErrorAsync(async (req, res, next) => {
 ));
 
 //追蹤
-userRouter.post("/users/:userId/follow", isAuth, handErrorAsync(async (req, res, next) => {
+userRouter.post("/:userId/follow", isAuth, handErrorAsync(async (req, res, next) => {
+  const regex = /^[A-Za-z0-9]+$/;
   const userId = req.params.userId;
   const authId = req.user._id.toString();
-  if (typeof userId !== 'string' || userId.trim() === "") return next(appError(400, "路徑缺少使用者"));
-
-
-
-  sendJWT(user, 201, res);
+  if (typeof userId !== 'string' || !regex.test(userId)) return next(appError(400, "路徑缺少使用者"));
+  const isUser = await User.find({ _id: userId });
+  if (isUser.length === 0) return next(appError(400, "無此使用者"));
+  if (userId === authId) return next(appError(400, "無法追蹤自己"));
+  const includeFollowing = await User.find({ _id: authId, following: { $in: [userId] } });
+  if (includeFollowing.length !== 0) return next(appError(400, "已經追蹤了"));
+  await User.updateOne({ _id: authId }, { $push: { following: userId } })
+  await User.updateOne({ _id: userId }, { $push: { followers: authId } })
+  resSuccess(res, 201, '追蹤成功');
 }
 ));
 
+//取消追蹤
+userRouter.delete("/:userId/unfollow", isAuth, handErrorAsync(async (req, res, next) => {
+  const regex = /^[A-Za-z0-9]+$/;
+  const userId = req.params.userId;
+  const authId = req.user._id.toString();
+  if (typeof userId !== 'string' || !regex.test(userId)) return next(appError(400, "路徑缺少使用者"));
+  const isUser = await User.find({ _id: userId });
+  if (isUser.length === 0) return next(appError(400, "無此使用者"));
+  if (userId === authId) return next(appError(400, "無法取消追蹤自己"));
+  const includeFollowing = await User.find({ _id: authId, following: { $in: [userId] } });
+  if (includeFollowing.length === 0) return next(appError(400, "還沒追蹤"));
+  await User.updateOne({ _id: authId }, { $pull: { following: userId } })
+  await User.updateOne({ _id: userId }, { $pull: { followers: authId } })
+  resSuccess(res, 201, '取消追蹤成功');
+}
+));
 
+//取得個人追蹤列表
+userRouter.get("/following", isAuth, handErrorAsync(async (req, res, next) => {
+  if (req.user === undefined) return next(appError(401, '你尚未登入！', next));
+  const followingData = await User.findById(req.user.id, "following -_id")
+    .populate({
+      path: "following",
+      select: "name photo -_id",
+    });
+  resSuccess(res, 201, followingData.following === undefined ? '沒有追蹤' : [followingData.following]);
+}
+));
 
 //取得個人按讚列表
 userRouter.get("/getLikeList", isAuth, handErrorAsync(async (req, res, next) => {

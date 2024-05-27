@@ -54,7 +54,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"email\":\"tom@gmail.com\",\r\n    \"password\":\"tom123456\"\r\n}",
+									"raw": "{\r\n    \"email\":\"joker@gmail.com\",\r\n    \"password\":\"joker123456\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -180,9 +180,15 @@
 							"name": "追蹤",
 							"request": {
 								"method": "POST",
-								"header": [],
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NTE4OWY1ODAyNjQ2OGQwMjVhNGY2ZCIsImlhdCI6MTcxNjgwNjU1NiwiZXhwIjoxNzE3NDExMzU2fQ.N3HUbZfixABZTftLnFXJvgxjmBtVuW8wNLCN7HqIOzw",
+										"type": "text"
+									}
+								],
 								"url": {
-									"raw": "http://localhost:3005/users/{userID}/follow",
+									"raw": "http://localhost:3005/users/66518faf2f394d011443407a/follow",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -190,7 +196,7 @@
 									"port": "3005",
 									"path": [
 										"users",
-										"{userID}",
+										"66518faf2f394d011443407a",
 										"follow"
 									]
 								}
@@ -201,9 +207,15 @@
 							"name": "取消追蹤",
 							"request": {
 								"method": "DELETE",
-								"header": [],
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NTE4OWY1ODAyNjQ2OGQwMjVhNGY2ZCIsImlhdCI6MTcxNjgwNjU1NiwiZXhwIjoxNzE3NDExMzU2fQ.N3HUbZfixABZTftLnFXJvgxjmBtVuW8wNLCN7HqIOzw",
+										"type": "text"
+									}
+								],
 								"url": {
-									"raw": "http://localhost:3005/users/{userID}/unfollow",
+									"raw": "http://localhost:3005/users/66518faf2f394d011443407a/unfollow",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -211,7 +223,7 @@
 									"port": "3005",
 									"path": [
 										"users",
-										"{userID}",
+										"66518faf2f394d011443407a",
 										"unfollow"
 									]
 								}
@@ -247,7 +259,13 @@
 							"name": "取得個人追蹤名單",
 							"request": {
 								"method": "GET",
-								"header": [],
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NTE4OWY1ODAyNjQ2OGQwMjVhNGY2ZCIsImlhdCI6MTcxNjgwNjU1NiwiZXhwIjoxNzE3NDExMzU2fQ.N3HUbZfixABZTftLnFXJvgxjmBtVuW8wNLCN7HqIOzw",
+										"type": "text"
+									}
+								],
 								"url": {
 									"raw": "http://localhost:3005/users/following",
 									"protocol": "http",

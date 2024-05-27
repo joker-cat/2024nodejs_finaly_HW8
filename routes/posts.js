@@ -30,11 +30,12 @@ postRouter.get(`/posts`, handErrorAsync(async (req, res) => {
 
 //取得個人所有貼文列表
 postRouter.get(`/post/user/:userId`, isAuth, handErrorAsync(async (req, res, next) => {
+  const regex = /^[A-Za-z0-9]+$/;
   const userId = req.params.userId;
   const authId = req.user._id.toString();
-  if (typeof userId !== 'string' || userId.trim() === "") return next(appError(400, "路徑缺少使用者"));
-  if (userId !== userId) return next(appError(400, "請確認使用者"));
-  const data = await Post.find({ user: req.params.userId })
+  if (typeof userId !== 'string' || !regex.test(userId)) return next(appError(400, "路徑缺少使用者"));
+  if (userId !== authId) return next(appError(400, "請確認使用者"));
+  const data = await Post.find({ user: userId })
   if (data.length === 0) return next(appError(400, "使用者無貼文"));
   resSuccess(res, 200, data);
 })
