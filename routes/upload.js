@@ -4,11 +4,11 @@ const appError = require("../service/appError");
 const handleErrorAsync = require("../service/handErrorAsync");
 const firebaseAdmin = require('../service/firebase');
 const upload = require('../service/image');
+const { isAuth, sendJWT } = require('../service/statusHandles');
 
 const router = express.Router();
 const bucket = firebaseAdmin.storage().bucket();
 
-const { isAuth, sendJWT } = require('../service/statusHandles');
 
 // 上傳圖片
 router.post('/file', isAuth, upload, handleErrorAsync(async (req, res, next) => {
@@ -19,7 +19,7 @@ router.post('/file', isAuth, upload, handleErrorAsync(async (req, res, next) => 
   // 取得上傳的檔案資訊列表裡面的第一個檔案
   const file = req.files[0];
   // 基於檔案的原始名稱建立一個 blob 物件
-  const blob = bucket.file(`nodejs_hw7/${uuidv4()}.${file.originalname.split('.').pop()}`);
+  const blob = bucket.file(`nodejs_hw8/${uuidv4()}.${file.originalname.split('.').pop()}`);
   // 建立一個可以寫入 blob 的物件
   const blobStream = blob.createWriteStream()
 

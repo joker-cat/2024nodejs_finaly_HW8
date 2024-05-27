@@ -72,7 +72,7 @@ userRouter.post("/updatePassword", isAuth, handErrorAsync(async (req, res, next)
     password: newPassword
   });
 
-  sendJWT(user, 200, res);
+  resSuccess(res, 200, '成功更改密碼');
 }
 ));
 
@@ -96,7 +96,7 @@ userRouter.patch("/profile", isAuth, handErrorAsync(async (req, res, next) => {
   if (updateKeys.includes('password')) return next(appError(400, '只允許修改基本個資'));
 
   const user = await User.findByIdAndUpdate(req.user.id, req.body);
-  sendJWT(user, 200, res);
+  resSuccess(res, 200, '成功更新個人資料');
 }
 ));
 
@@ -149,16 +149,16 @@ userRouter.get("/following", isAuth, handErrorAsync(async (req, res, next) => {
 //取得個人按讚列表
 userRouter.get("/getLikeList", isAuth, handErrorAsync(async (req, res, next) => {
   if (req.user === undefined) return next(appError(401, '你尚未登入！', next));
+  console.log(req.user.id);
   const likesData = await User.findById(req.user.id, "likes -_id")
     .populate({
       path: "likes",
       select: "-_id",
     });
-  console.log(likesData.likes);
+  console.log(likesData);
   resSuccess(res, 201, likesData.likes === undefined ? '沒有按讚' : [likesData.likes]);
 }
 ));
-
 
 
 module.exports = userRouter;
