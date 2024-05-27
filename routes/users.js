@@ -56,12 +56,8 @@ userRouter.post("/sign_in", handErrorAsync(async (req, res, next) => {
 
 //找回密碼
 userRouter.post("/updatePassword", isAuth, handErrorAsync(async (req, res, next) => {
-  //再次檢查是否有登入，即將更改密碼
-  if (req.user === undefined) return next(appError(401, '你尚未登入！', next));
-
   let newPassword = null;
   const { password, confirmPassword } = req.body;
-
   if (password.trim() !== confirmPassword.trim()) return next(appError(400, "密碼不一致！", next));
   if (!validator.isByteLength(password.trim(), { min: 6, max: 18 })) return next(appError(400, "密碼需介於 6-18 字元之間"));
 
@@ -78,7 +74,6 @@ userRouter.post("/updatePassword", isAuth, handErrorAsync(async (req, res, next)
 
 //查詢個人資料
 userRouter.get("/profile", isAuth, handErrorAsync(async (req, res, next) => {
-  if (req.user === undefined) return next(appError(401, '你尚未登入！', next));
   const user = await User.findById(req.user.id);
   res.status(201).json({
     status: 'success',
@@ -89,13 +84,9 @@ userRouter.get("/profile", isAuth, handErrorAsync(async (req, res, next) => {
 
 //更新個人資料
 userRouter.patch("/profile", isAuth, handErrorAsync(async (req, res, next) => {
-
-  if (req.user === undefined) return next(appError(401, '你尚未登入！'));
-  //檢查是否有修改密碼到
   const updateKeys = Object.keys(req.body);
   if (updateKeys.includes('password')) return next(appError(400, '只允許修改基本個資'));
-
-  const user = await User.findByIdAndUpdate(req.user.id, req.body);
+  await User.findByIdAndUpdate(req.user.id, req.body);
   resSuccess(res, 200, '成功更新個人資料');
 }
 ));
