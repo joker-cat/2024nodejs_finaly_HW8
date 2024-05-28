@@ -2,7 +2,7 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const { resSuccess } = require("../service/resModule");
 const { sendJWT, isAuth } = require("../service/statusHandles");
-const validateKey = require("../service/validateModule");
+const { valPostKeyKey } = require("../service/validateModule");
 const Post = require("../model/PostModel");
 const User = require("../model/UserModel");
 const Comment = require("../model/CommentModel");
@@ -24,6 +24,7 @@ postRouter.get(`/posts`, handErrorAsync(async (req, res) => {
       select: "comment user createdAt -_id -post",
     })
     .sort(timeSort);
+
   resSuccess(res, 200, data);
 })
 );
@@ -53,12 +54,16 @@ postRouter.get(`/posts/:postId`, handErrorAsync(async (req, res, next) => {
       select: "comment user createdAt",
     })
   if (data.length === 0) return next(appError(400, "找不到貼文"));
+
   resSuccess(res, 200, data);
 })
 );
 
 //貼文
 postRouter.post("/post", isAuth, handErrorAsync(async (req, res, next) => {
+  const reqObj = req.body;
+  const notFoundKey = valPostKeyKey(Object.keys(reqObj));
+  if (notFoundKey?.name === 'Error') return next(notFoundKey);
   if (req.user._id.toString() !== req.body.user) return next(appError(400, "請確認使用者"));
   if (req.body.content == undefined || req.body.content.trim() === "") {
     return next(appError(400, "你沒有填寫 content 資料"));
@@ -83,6 +88,7 @@ postRouter.post("/posts/:postId/comment", isAuth, handErrorAsync(async (req, res
     user: req.user._id,
     post: req.params.postId
   });
+
   resSuccess(res, 200, [newComment]);
 })
 );
@@ -96,6 +102,7 @@ postRouter.post("/posts/:postId/like", isAuth, handErrorAsync(async (req, res, n
   const includeLike = await User.find({ _id: userId, likes: { $in: [postId] } });
   if (includeLike.length !== 0) return next(appError(400, "已經按過讚了"));
   await User.updateOne({ _id: userId }, { $push: { likes: postId } })
+
   resSuccess(res, 200, '按讚成功');
 })
 );
@@ -109,6 +116,7 @@ postRouter.delete("/posts/:postId/unlike", isAuth, handErrorAsync(async (req, re
   const includeLike = await User.find({ _id: userId, likes: { $in: [postId] } });
   if (includeLike.length === 0) return next(appError(400, "尚未按讚"));
   await User.updateOne({ _id: userId }, { $pull: { likes: postId } })
+
   resSuccess(res, 200, '取消按讚成功');
 })
 );
@@ -120,12 +128,14 @@ postRouter.patch("/post/:postId", isAuth, handErrorAsync(async (req, res, next) 
   if (req.user._id.toString() !== patchUser.user.toString()) {
     return next(appError(400, "請確認使用者"));
   }
-  const reqObj = req.body;
+  const reqObj = Object.keys(req.body);
   const postId = req.params.postId;
-  const notFoundKey = validateKey(Object.keys(reqObj));
+  const notFoundKey = valPostKeyKey(reqObj);
   if (notFoundKey?.name === 'Error') return next(notFoundKey);
-  const isNull = await Post.findByIdAndUpdate(postId, reqObj);
+  if (reqObj.includes('user')) return next(appError(400, '不允許修改使用者'));
+  const isNull = await Post.findByIdAndUpdate(postId, req.body);
   if (isNull === null) return next(appError(400, "修改失敗"));
+
   resSuccess(res, 200, "更新成功");
 })
 );
@@ -136,7 +146,6 @@ postRouter.delete("/post/:postId", isAuth, handErrorAsync(async (req, res, next)
   if (postId === '') return next(appError(400, "路徑錯誤"));
   const delPost = await Post.findById(postId);
   if (delPost === null) return next(appError(400, "找不到資料"));
-  console.log(req.user._id.toString(), delPost.user);
   if (req.user._id.toString() !== delPost.user.toString()) {
     return next(appError(400, "請確認使用者"));
   }
@@ -158,10 +167,10 @@ postRouter.delete("/posts", isAuth, handErrorAsync(async (req, res, next) => {
   const user = await User.findOne({ _id: req.user._id.toString() }).select('+password');
   // 輸入密碼與雜湊密碼比對
   const auth = await bcrypt.compare(req.body.password, user.password);
-
   if (!auth) return next(appError(400, "密碼錯誤"));
 
   await Post.deleteMany({ user: req.user._id });
+
   resSuccess(res, 200, "全部清空");
 })
 );

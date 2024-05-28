@@ -34,12 +34,12 @@ const [schema, options] = [
       ref: "post",
       default: []
     },
-    following:{ //追蹤
+    following: { //追蹤
       type: [mongoose.Schema.ObjectId],
       ref: "user",
       default: []
     },
-    followers:{ //被追蹤
+    followers: { //被追蹤
       type: [mongoose.Schema.ObjectId],
       ref: "user",
       default: []
